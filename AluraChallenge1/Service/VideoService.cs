@@ -5,55 +5,24 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using AluraChallenge1.Service.Interfaces;
 
 namespace AluraChallenge1.Service
 {
-    public class VideoService : IVideoService
+    public class VideoService : BaseService<Video>, IVideoService
     {
         private readonly Context _context;
 
-        public VideoService(Context context)
+        public VideoService(Context context) : base(context)
         {
             _context = context;
         }
 
-        public async Task<List<Video>> GetAllAsync()
+        public async Task<List<Video>> SearchVideoAsync(string titulo)
         {
-            return await _context
-                .Set<Video>()
+            return await _context.Videos.Where(v => v.Titulo.ToLower().Contains(titulo.ToLower()))
                 .AsNoTracking()
                 .ToListAsync();
-        }
-
-        public async Task<Video> GetAsync(Guid id)
-        {
-            var obj = await GetAllAsync();
-            return obj.Where(v => v.Id == id).FirstOrDefault();
-        }
-
-        public async Task RemoveAsync(Guid id)
-        {
-            var obj = await GetAsync(id);
-
-            if(obj != null)
-            {
-                _context.Videos.Remove(obj);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public async Task<Video> CreateAsync(Video model)
-        {
-            _context.Videos.Add(model);
-            await _context.SaveChangesAsync();
-            return model;
-        }
-
-        public async Task<Video> UpdateAsync(Video model)
-        {
-            _context.Entry(model).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return model;
         }
     }
 }

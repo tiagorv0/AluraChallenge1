@@ -2,6 +2,7 @@ using AluraChallenge1.DTO;
 using AluraChallenge1.Infra;
 using AluraChallenge1.Models;
 using AluraChallenge1.Service;
+using AluraChallenge1.Service.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,11 +34,14 @@ namespace AluraChallenge1
             });
 
             services.AddScoped<IVideoService, VideoService>();
+            services.AddScoped<ICategoriaService, CategoriaService>();
 
             var autoMapperConfig = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Video, CreateVideoDTO>().ReverseMap();
                 cfg.CreateMap<Video, UpdateVideoDTO>().ReverseMap();
+                cfg.CreateMap<Categoria, CreateCategoriaDTO>().ReverseMap();
+                cfg.CreateMap<Categoria, UpdateCategoriaDTO>().ReverseMap();
             });
 
             services.AddSingleton(autoMapperConfig.CreateMapper());

@@ -11,6 +11,15 @@ namespace AluraChallenge1.Infra
 
         }
 
-        public DbSet<Video> Videos { get; set; }
+        public virtual DbSet<Video> Videos { get; set; }
+        public virtual DbSet<Categoria> Categorias { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Video>()
+                .HasOne(video => video.Categoria)
+                .WithMany(categoria => categoria.Videos)
+                .HasForeignKey(v => v.CategoriaId);
+        }
     }
 }
